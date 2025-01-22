@@ -1,0 +1,49 @@
+POST http://localhost:3001/auth/login
+Content-Type: application/json
+{
+  "email": "partner1@user.com",
+  "password": "secret"
+}
+
+###
+POST http://localhost:3001/partners
+Content-Type: application/json
+{
+  "name": "Partner 1",
+  "email": "partner1@user.com",
+  "password": "secret",
+  "company": "Company 1"
+}
+
+###
+POST http://localhost:3001/customers
+Content-Type: application/json
+{
+  "name": "Customer 1",
+  "email": "customer1@user.com",
+  "password": "secret",
+  "address": "Address1",
+  "phone": "123456789"
+}
+
+###
+POST http://localhost:3001/partners/events
+Content-Type: application/json
+{
+  "name": "Event 1",
+  "description": "Event description",
+  "date": "2025-01-01T00:00:00",
+  "location": "Address1"
+}
+
+###
+GET http://localhost:3001/partners/events
+
+###
+GET http://localhost:3001/partners/events/id
+
+###
+GET http://localhost:3001/events
+
+###
+GET http://localhost:3001/events/id
