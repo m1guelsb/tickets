@@ -79,10 +79,10 @@ Content-Type: application/json
 Authorization: Bearer {{ tokenPartner1 }}
 
 {
-  "name": "Event 1",
+  "name": "Event 2",
   "description": "Event description",
   "date": "2025-01-01T00:00:00",
-  "location": "Address1"
+  "location": "Address2"
 }
 
 ###
@@ -98,4 +98,4 @@ Authorization: Bearer {{ tokenPartner2 }}
 GET http://localhost:3001/events
 
 ###
-GET http://localhost:3001/events/id
+GET http://localhost:3001/events/1

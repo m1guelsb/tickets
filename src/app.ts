@@ -247,6 +247,7 @@ app.get("/partners/events/:eventId", async (req, res) => {
 
     if (!event) {
       res.status(404).json({ message: "Event not found" });
+      return;
     }
 
     res.json(event);
@@ -257,12 +258,42 @@ app.get("/partners/events/:eventId", async (req, res) => {
   }
 });
 
-app.get("/events", (req, res) => {});
+app.get("/events", async (req, res) => {
+  const connection = await createConnection();
+  try {
+    const [eventRows] = await connection.execute<mysql.RowDataPacket[]>(
+      "SELECT * FROM events"
+    );
 
-app.get("/events/:eventId", (req, res) => {
+    res.json(eventRows);
+  } catch (error) {
+    res.status(500).send(error);
+  } finally {
+    await connection.end();
+  }
+});
+
+app.get("/events/:eventId", async (req, res) => {
   const { eventId } = req.params;
-  console.log(eventId);
-  res.send();
+  const connection = await createConnection();
+  try {
+    const [eventRows] = await connection.execute<mysql.RowDataPacket[]>(
+      "SELECT * FROM events WHERE id = ?",
+      [eventId]
+    );
+    const event = eventRows.length ? eventRows[0] : null;
+
+    if (!event) {
+      res.status(404).json({ message: "Event not found" });
+      return;
+    }
+
+    res.json(event);
+  } catch (error) {
+    res.status(500).send(error);
+  } finally {
+    await connection.end();
+  }
 });
 
 app.listen(3001, async () => {
