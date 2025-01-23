@@ -1,23 +1,42 @@
+###
+# @name loginPartner1
 POST http://localhost:3001/auth/login
 Content-Type: application/json
+
 {
   "email": "partner1@user.com",
   "password": "secret"
 }
 
 ###
-POST http://localhost:3001/partners
+@tokenPartner1 = {{ loginPartner1.response.body.token }}
+
+###
+# @name loginCustomer1
+POST http://localhost:3001/auth/login
+Content-Type: application/json
+
+{
+  "email": "customer1@user.com",
+  "password": "secret"
+}
+
+###
+@tokenCustomer1 = {{ loginCustomer1.response.body.token }}
+
+###
+POST http://localhost:3001/partners/register
 Content-Type: application/json
 
 {
   "name": "Partner 1",
-  "email": "partner2@user.com",
+  "email": "partner1@user.com", 
   "password": "secret",
   "company": "Company 1"
 }
 
 ###
-POST http://localhost:3001/customers
+POST http://localhost:3001/customers/register
 Content-Type: application/json
 
 {
@@ -31,6 +50,8 @@ Content-Type: application/json
 ###
 POST http://localhost:3001/partners/events
 Content-Type: application/json
+Authorization: Bearer {{ tokenPartner1 }}
+
 {
   "name": "Event 1",
   "description": "Event description",
