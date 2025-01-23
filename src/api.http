@@ -1,4 +1,41 @@
 ###
+//partner 1 post
+POST http://localhost:3001/partners/register
+Content-Type: application/json
+
+{
+  "name": "Partner 1",
+  "email": "partner1@user.com", 
+  "password": "secret",
+  "company": "Company 1"
+}
+
+###
+//partner 2 post
+POST http://localhost:3001/partners/register
+Content-Type: application/json
+
+{
+  "name": "Partner 2",
+  "email": "partner2@user.com", 
+  "password": "secret",
+  "company": "Company 2"
+}
+
+###
+POST http://localhost:3001/customers/register
+Content-Type: application/json
+
+{
+  "name": "Customer 1",
+  "email": "customer1@user.com",
+  "password": "secret",
+  "address": "Address1",
+  "phone": "123456789"
+}
+
+
+###
 # @name loginPartner1
 POST http://localhost:3001/auth/login
 Content-Type: application/json
@@ -7,9 +44,20 @@ Content-Type: application/json
   "email": "partner1@user.com",
   "password": "secret"
 }
-
 ###
 @tokenPartner1 = {{ loginPartner1.response.body.token }}
+
+###
+# @name loginPartner2
+POST http://localhost:3001/auth/login
+Content-Type: application/json
+
+{
+  "email": "partner2@user.com",
+  "password": "secret"
+}
+###
+@tokenPartner2 = {{ loginPartner2.response.body.token }}
 
 ###
 # @name loginCustomer1
@@ -24,28 +72,6 @@ Content-Type: application/json
 ###
 @tokenCustomer1 = {{ loginCustomer1.response.body.token }}
 
-###
-POST http://localhost:3001/partners/register
-Content-Type: application/json
-
-{
-  "name": "Partner 1",
-  "email": "partner1@user.com", 
-  "password": "secret",
-  "company": "Company 1"
-}
-
-###
-POST http://localhost:3001/customers/register
-Content-Type: application/json
-
-{
-  "name": "Customer 1",
-  "email": "customer1@user.com",
-  "password": "secret",
-  "address": "Address1",
-  "phone": "123456789"
-}
 
 ###
 POST http://localhost:3001/partners/events
@@ -61,9 +87,12 @@ Authorization: Bearer {{ tokenPartner1 }}
 
 ###
 GET http://localhost:3001/partners/events
+Authorization: Bearer {{ tokenPartner1 }}
+
 
 ###
-GET http://localhost:3001/partners/events/id
+GET http://localhost:3001/partners/events/1
+Authorization: Bearer {{ tokenPartner2 }}
 
 ###
 GET http://localhost:3001/events
