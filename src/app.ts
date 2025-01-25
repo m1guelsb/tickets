@@ -1,11 +1,11 @@
 import express from "express";
-import * as mysql from "mysql2/promise";
 import jwt from "jsonwebtoken";
 import { createConnection } from "./database";
 import { authRoutes } from "./controllers/auth-controller";
 import { partnersRoutes } from "./controllers/partners-controller";
 import { customersRoutes } from "./controllers/customers-controller";
 import { eventsRoutes } from "./controllers/events-controller";
+import { UsersService } from "./services/users-service";
 
 const app = express();
 app.use(express.json());
@@ -32,25 +32,20 @@ app.use(async (req, res, next) => {
     return;
   }
 
-  const connection = await createConnection();
   try {
     const payload = jwt.verify(token, "12345") as { id: number; email: string };
 
-    const [rows] = await connection.execute<mysql.RowDataPacket[]>(
-      "SELECT * FROM users WHERE id = ?",
-      [payload.id]
-    );
-    const user = rows.length ? rows[0] : null;
+    const usersService = new UsersService();
+    const user = await usersService.findById(payload.id);
+
     if (!user) {
-      res.status(401).json({ message: "Token is invalid" });
+      res.status(401).json({ message: "Invalid token" });
       return;
     }
     req.user = user as { id: number; email: string };
     next();
   } catch (error) {
-    res.status(401).json({ message: "Token is invalid" });
-  } finally {
-    await connection.end();
+    res.status(401).json({ message: "Failed to authenticate" });
   }
 });
 
