@@ -12,7 +12,7 @@ ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `partners`(
   `id` INT NOT NULL AUTO_INCREMENT,
-  `company` VARCHAR(255) NOT NULL,
+  `company_name` VARCHAR(255) NOT NULL,
   `created_at` TIMESTAMP NOT NULL,
   `user_id` INT NOT NULL,
   PRIMARY KEY (`id`),

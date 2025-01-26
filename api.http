@@ -7,7 +7,7 @@ Content-Type: application/json
   "name": "Partner 1",
   "email": "partner1@user.com", 
   "password": "secret",
-  "company": "Company 1"
+  "company_name": "Company 1"
 }
 
 ###
@@ -19,7 +19,7 @@ Content-Type: application/json
   "name": "Partner 2",
   "email": "partner2@user.com", 
   "password": "secret",
-  "company": "Company 2"
+  "company_name": "Company 2"
 }
 
 ###

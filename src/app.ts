@@ -1,11 +1,11 @@
 import express from "express";
 import jwt from "jsonwebtoken";
-import { createConnection } from "./database";
 import { authRoutes } from "./controllers/auth-controller";
-import { partnersRoutes } from "./controllers/partners-controller";
-import { customersRoutes } from "./controllers/customers-controller";
-import { eventsRoutes } from "./controllers/events-controller";
-import { UsersService } from "./services/users-service";
+import { partnerRoutes } from "./controllers/partner-controller";
+import { customerRoutes } from "./controllers/customer-controller";
+import { eventRoutes } from "./controllers/event-controller";
+import { UserService } from "./services/user-service";
+import { Database } from "./database";
 
 const app = express();
 app.use(express.json());
@@ -18,44 +18,45 @@ const publicRoutes = [
 ];
 
 app.use(async (req, res, next) => {
-  const isPublicRoute = publicRoutes.some(
+  const isUnprotectedRoute = publicRoutes.some(
     (route) => route.method == req.method && req.path.startsWith(route.path)
   );
 
-  if (isPublicRoute) {
+  if (isUnprotectedRoute) {
     return next();
   }
 
-  const token = req.headers.authorization?.split(" ")[1];
+  const token = req.headers["authorization"]?.split(" ")[1];
   if (!token) {
     res.status(401).json({ message: "No token provided" });
     return;
   }
 
   try {
-    const payload = jwt.verify(token, "12345") as { id: number; email: string };
-
-    const usersService = new UsersService();
-    const user = await usersService.findById(payload.id);
-
+    const payload = jwt.verify(token, "123456") as {
+      id: number;
+      email: string;
+    };
+    const userService = new UserService();
+    const user = await userService.findById(payload.id);
     if (!user) {
-      res.status(401).json({ message: "Invalid token" });
+      res.status(401).json({ message: "Failed to authenticate token" });
       return;
     }
     req.user = user as { id: number; email: string };
     next();
   } catch (error) {
-    res.status(401).json({ message: "Failed to authenticate" });
+    res.status(401).json({ message: "Failed to authenticate token" });
   }
 });
 
 app.use("/auth", authRoutes);
-app.use("/partners", partnersRoutes);
-app.use("/customers", customersRoutes);
-app.use("/events", eventsRoutes);
+app.use("/partners", partnerRoutes);
+app.use("/customers", customerRoutes);
+app.use("/events", eventRoutes);
 
 app.listen(3001, async () => {
-  const connection = await createConnection();
+  const connection = Database.getInstance();
   await connection.execute("SET FOREIGN_KEY_CHECKS = 0");
   await connection.execute("TRUNCATE TABLE events");
   await connection.execute("TRUNCATE TABLE customers");

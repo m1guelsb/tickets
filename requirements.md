@@ -45,7 +45,7 @@ The system will be a **REST API** designed to enable the creation, management, a
    - `name`: Full name of the partner.
    - `email`: Email for login and contact.
    - `password`: Encrypted password.
-   - `company name`: Name of the associated company.
+   - `company_name name`: Name of the associated company_name.
 
 2. **Customers**  
    Represent ticket buyers.  
@@ -58,7 +58,7 @@ The system will be a **REST API** designed to enable the creation, management, a
    - `address`: Customer address.
    - `phone`: Contact phone number.
 
-3. **Events**  
+3. **Event**  
    Represent events created by partners.  
    **Fields:**
 
