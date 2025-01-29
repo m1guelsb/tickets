@@ -79,11 +79,23 @@ Content-Type: application/json
 Authorization: Bearer {{ tokenPartner1 }}
 
 {
-  "name": "Event 2",
+  "name": "Event 1",
   "description": "Event description",
   "date": "2025-01-01T00:00:00",
-  "location": "Address2"
+  "location": "Address1"
 }
+
+###
+# @name ticketsPost
+POST http://localhost:3001/events/1/tickets
+Content-Type: application/json
+Authorization: Bearer {{ tokenPartner1 }}
+
+{
+"num_tickets": 10,
+"price": 100
+}
+
 
 ###
 GET http://localhost:3001/partners/events
