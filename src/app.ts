@@ -1,14 +1,15 @@
 import express from "express";
 import jwt from "jsonwebtoken";
+import { Database } from "./database";
 import { authRoutes } from "./controllers/auth-controller";
 import { partnerRoutes } from "./controllers/partner-controller";
 import { customerRoutes } from "./controllers/customer-controller";
 import { eventRoutes } from "./controllers/event-controller";
 import { UserService } from "./services/user-service";
-import { Database } from "./database";
 import { ticketRoutes } from "./controllers/ticket-controller";
+import { purchaseRoutes } from "./controllers/purchase-controller";
 
-const app = express();
+export const app = express();
 app.use(express.json());
 
 const publicRoutes = [
@@ -56,15 +57,19 @@ app.use("/partners", partnerRoutes);
 app.use("/customers", customerRoutes);
 app.use("/events", eventRoutes);
 app.use("/events", ticketRoutes);
+app.use("/purchases", purchaseRoutes);
 
 app.listen(3001, async () => {
   const connection = Database.getInstance();
   await connection.execute("SET FOREIGN_KEY_CHECKS = 0");
-  await connection.execute("TRUNCATE TABLE events");
+  await connection.execute("TRUNCATE TABLE reservation_tickets");
+  await connection.execute("TRUNCATE TABLE purchase_tickets");
+  await connection.execute("TRUNCATE TABLE purchases");
   await connection.execute("TRUNCATE TABLE tickets");
+  await connection.execute("TRUNCATE TABLE events");
   await connection.execute("TRUNCATE TABLE customers");
   await connection.execute("TRUNCATE TABLE partners");
   await connection.execute("TRUNCATE TABLE users");
   await connection.execute("SET FOREIGN_KEY_CHECKS = 1");
-  console.log("Running at 3001");
+  console.log("Running in http://localhost:3001");
 });
